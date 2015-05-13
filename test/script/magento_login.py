@@ -28,23 +28,15 @@ class MagentoInteraction(object):
                 "login[password]": self.password}
         print json.dumps(data, indent=4)
         r = self.session.post(url, data=data, allow_redirects=False, verify=False)
-        print "------- Before redirect ---------"
-        print r.text
-        print "------- After redirect ----------"
         while r.is_redirect:
             redirected_url = r.headers.get('location')
             print "redirecting to {}...".format(re.sub(self.domain, self.ip, redirected_url))
             r = self.session.get(re.sub(self.domain, self.ip, redirected_url), allow_redirects=False, verify=False)
-            if r.is_redirect:
-                print "There was a redirect: {}".format(r.headers.get('location'))
         print "status code is {}".format(r.status_code)
         return r.text
 
     def login_successful(self):
         content = self.magento_post_login()
-        print '-----------'
-        print content
-        print '-----------'
         return "Dashboard" in content
 
 
