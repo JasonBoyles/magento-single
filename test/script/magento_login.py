@@ -29,9 +29,10 @@ class MagentoInteraction(object):
         print json.dumps(data, indent=4)
         r = self.session.post(url, data=data, allow_redirects=False, verify=False)
         while r.is_redirect:
-            redirected_url = r.headers.get('location')
-            print "redirecting to {}...".format(re.sub(self.domain, self.ip, redirected_url))
-            r = self.session.get(re.sub(self.domain, self.ip, redirected_url), allow_redirects=False, verify=False)
+            redirect_url = r.headers.get('location')
+            patched_url = re.sub(self.domain, self.ip, redirect_url)
+            print "redirecting to {}...".format(patched_url)
+            r = self.session.get(patched_url, allow_redirects=False, verify=False)
         print "status code is {}".format(r.status_code)
         return r.text
 
