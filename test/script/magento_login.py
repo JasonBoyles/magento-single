@@ -34,7 +34,9 @@ class MagentoInteraction(object):
         if r.is_redirect:
             redirected_url = r.headers.get('location')
             print "redirecting to {}...".format(re.sub(self.domain, self.ip, redirected_url))
-            r = self.session.get(re.sub(self.domain, self.ip, redirected_url), verify=False)
+            r = self.session.get(re.sub(self.domain, self.ip, redirected_url), allow_redirects=False, verify=False)
+            if r.is_redirect:
+                print "There was a second redirect: {}".format(r.headers.get('location'))
         print "status code is {}".format(r.status_code)
         return r.text
 
